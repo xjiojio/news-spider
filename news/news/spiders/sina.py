@@ -80,7 +80,7 @@ class SinaSpider(scrapy.Spider):
         item['keywords'] = news['keywords']
         item['content'] = ''.join(response.xpath('//*[@id="artibody"]/p/text()').extract()).replace(u'\u3000\u3000', u'\n').replace(u'\xa0\xa0', u'\n').replace(u'\r\n', u'\n').replace(u'\n\r', u'\n').strip()
         item['source'] = '新浪'
-        # item['tag'] = 'tag'
+        # item['category'] = 'category'
 
         yield item
         pass

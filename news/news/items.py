@@ -20,5 +20,5 @@ class NewsItem(scrapy.Item):
     keywords = scrapy.Field()
     content = scrapy.Field()
     source = scrapy.Field()
-    tag = scrapy.Field()
+    category = scrapy.Field()
     pass

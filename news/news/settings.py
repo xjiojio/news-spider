@@ -27,7 +27,7 @@ FEED_EXPORT_FIELDS = [
     'keywords',
     'content',
     'source',
-    'tag']
+    'cate']
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'news (+http://www.yourdomain.com)'
