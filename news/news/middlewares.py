@@ -5,7 +5,11 @@
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
+import random
+import pymysql
 from scrapy import signals
+from scrapy.conf import settings
+from fake_useragent import UserAgent
 
 
 class NewsSpiderMiddleware(object):
@@ -101,3 +105,30 @@ class NewsDownloaderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+# 自定义IP代理中间件
+class ProxyMiddleware(object):
+    def process_request(self, request, spider):
+        proxies = []
+        conn = pymysql.connect(host="127.0.0.1", user="root", passwd="qq123456", db="news-spider", charset="utf8")
+        cursor = conn.cursor()
+        sql = "select * from ip_proxy"
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        for row in results:
+            ip = row[1]
+            port = row[2]
+            type = row[3]
+            proxy_url = '{0}://{1}:{2}'.format(type, ip, port)
+            proxies.append(proxy_url)
+        # proxy = random.choice(proxies)
+        proxy = random.choice(settings['PROXIES'])
+        request.meta['proxy'] = proxy
+
+        pass
+
+# 自定义请求头中间件
+class UAMiddleware(object):
+    def process_request(self, request, spider):
+        ua = UserAgent(verify_ssl=False)
+        request.headers['User-Agent'] = ua.random
