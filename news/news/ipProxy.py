@@ -95,3 +95,8 @@ class IpProxy(object):
         sql = "delete from ip_proxy where ip = " + ip
         cursor.execute(sql)
         conn.commit()
+
+    def delete_all_ip(self):
+        sql = "delete from ip_proxy"
+        cursor.execute(sql)
+        conn.commit()

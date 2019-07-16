@@ -9,26 +9,30 @@ from news.items import NewsItem
 class SinaSpider(scrapy.Spider):
     name = 'sina'
     allowed_domains = ['sina.com.cn']
-    start_urls = []
+
+    base_url = 'https://feed.mix.sina.com.cn/api/roll/get?pageid=153&lid={}&k=&num=50&page={}&r={}'
 
     # 全部、国内、国际、社会、体育、娱乐、军事、科技、财经、股市、美股
     lids = ['2509', '2510', '2511', '2669', '2512', '2513', '2514', '2515', '2516', '2517', '2518']
     index = 0
     page = 1
 
-    url = 'https://feed.mix.sina.com.cn/api/roll/get?pageid=153&lid=%s&num=50&page=%d&r=%f' % (lids[index], page, random.random())
-    start_urls.append(url)
-
-    def start_request(self):
-        yield Request(self.start_urls)
+    def start_requests(self):
+        #  可修改  这里设置爬取100页
+        page_total = 100
+        for page in range(1, page_total + 1):
+            #  按上面注释  可修改 这里"2509"代表"全部"类别的新闻
+            lid = "2509"
+            r = random.random()
+            yield Request(self.base_url.format(lid, page, r), callback=self.parse)
 
     def parse(self, response):
         print("开始爬虫。。。")
         print(self.url)
 
         res = response.body_as_unicode()
-        if res == '':
-            print("response is null(403)")
+        if response.status == 403:
+            print("response status:" + str(response.status))
         else:
             sites = json.loads(res)
             if len(sites['result']['data']):
@@ -36,7 +40,6 @@ class SinaSpider(scrapy.Spider):
                     request = scrapy.Request(news['url'], callback=self.parse_detail)
                     request.meta['news'] = news
                     yield request
-                print("结束1")
             else:
                 print("data null,url with new lid:")
                 self.index += 1
@@ -45,19 +48,14 @@ class SinaSpider(scrapy.Spider):
                     return
                 self.page = 0
                 self.url = 'https://feed.mix.sina.com.cn/api/roll/get?pageid=153&lid=%s&num=50&page=%d&r=%f' % (self.lids[self.index], self.page, random.random())
-                # print(self.url)
+                print(self.url)
                 yield scrapy.Request(self.url, callback=self.parse)
-                print("结束2")
-
-        self.page += 1
-        self.url = 'https://feed.mix.sina.com.cn/api/roll/get?pageid=153&lid=%s&num=50&page=%d&r=%f' % (self.lids[self.index], self.page, random.random())
-        # print(self.url)
-        yield scrapy.Request(self.url, callback=self.parse)
-        print("结束3")
+                print("进入下一分类")
 
         pass
 
     def parse_detail(self, response):
+        # time.sleep(random.randint(3, 7))
         print("爬取信息。。。")
         item = NewsItem()
         news = response.meta['news']

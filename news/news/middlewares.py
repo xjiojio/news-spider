@@ -121,8 +121,8 @@ class ProxyMiddleware(object):
             type = row[3]
             proxy_url = '{0}://{1}:{2}'.format(type, ip, port)
             proxies.append(proxy_url)
-        # proxy = random.choice(proxies)
-        proxy = random.choice(settings['PROXIES'])
+        proxy = random.choice(proxies)
+        # proxy = random.choice(settings['PROXIES'])
         request.meta['proxy'] = proxy
 
         pass
