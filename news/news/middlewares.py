@@ -8,7 +8,6 @@
 import random
 import pymysql
 from scrapy import signals
-from scrapy.conf import settings
 from fake_useragent import UserAgent
 
 
@@ -106,6 +105,7 @@ class NewsDownloaderMiddleware(object):
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
 
+
 # 自定义IP代理中间件
 class ProxyMiddleware(object):
     def process_request(self, request, spider):
@@ -122,10 +122,12 @@ class ProxyMiddleware(object):
             proxy_url = '{0}://{1}:{2}'.format(type, ip, port)
             proxies.append(proxy_url)
         proxy = random.choice(proxies)
-        # proxy = random.choice(settings['PROXIES'])
+
         request.meta['proxy'] = proxy
+        conn.close()
 
         pass
+
 
 # 自定义请求头中间件
 class UAMiddleware(object):

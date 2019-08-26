@@ -67,7 +67,7 @@ class IpProxy(object):
                 print("Available:" + proxy_url)
                 return True
             else:
-                print('invalid ip and port')
+                print('invalid proxy')
                 return False
 
     def is_exist(self, ip):
@@ -97,6 +97,23 @@ class IpProxy(object):
         conn.commit()
 
     def delete_all_ip(self):
+        print("delete all ip")
         sql = "delete from ip_proxy"
         cursor.execute(sql)
         conn.commit()
+
+    def delete_invalid_ip(self):
+        print("delete invalid ip")
+        sql = "select * from ip_proxy"
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        for var in result:
+            proxy_url = '{0}://{1}:{2}'.format(var[3], var[1], var[2])
+            available = self.check_ip(var[3], proxy_url)
+            if available:
+                print("ip " + var[1] + " available")
+            else:
+                sql = "delete from ip_proxy where ip='%s'" % (var[1])
+                cursor.execute(sql)
+                conn.commit()
+                print("delete ip:" + var[1])
