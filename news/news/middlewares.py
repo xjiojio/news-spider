@@ -109,12 +109,18 @@ class NewsDownloaderMiddleware(object):
 # 自定义IP代理中间件
 class ProxyMiddleware(object):
     def process_request(self, request, spider):
-        proxies = []
-        conn = pymysql.connect(host="127.0.0.1", user="root", passwd="qq123456", db="news-spider", charset="utf8")
+        conn = pymysql.connect(
+            host="127.0.0.1",
+            user="hdsc",
+            passwd="hdsc0614",
+            db="news-spider",
+            charset="utf8")
         cursor = conn.cursor()
+
         sql = "select * from ip_proxy"
         cursor.execute(sql)
         results = cursor.fetchall()
+        proxies = []
         for row in results:
             ip = row[1]
             port = row[2]

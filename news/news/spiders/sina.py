@@ -15,26 +15,37 @@ class SinaSpider(scrapy.Spider):
 
     # 全部、国内、国际、社会、体育、娱乐、军事、科技、财经、股市、美股
     category = {
-        '2509': 'news',
-        '2510': 'china',
-        '2511': 'world',
-        '2669': 'society',
-        '2512': 'sports',
-        '2513': 'ent',
-        '2514': 'milite',
-        '2515': 'tech',
-        '2516': 'finance',
-        '2517': 'stock',
-        '2518': 'usstock',
+        '2509': '"news"',
+        '2510': '"china"',
+        '2511': '"world"',
+        '2669': '"society"',
+        '2512': '"sports"',
+        '2513': '"ent"',
+        '2514': '"milite"',
+        '2515': '"tech"',
+        '2516': '"finance"',
+        '2517': '"stock"',
+        '2518': '"usstock"',
     }
     #  按上面注释  可修改 这里"2509"代表"全部"类别的新闻
-    lid = "2509"
+    lid = None
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        print("init SinaSpider...")
+        f = open("./news/spiders/sina_lid.json", "r")
+        lid_json = f.read()
+        lid_dic = json.loads(lid_json)
+        self.lid = lid_dic['lid']
+        # print("lid:" + str(self.lid))
+        # exit(0)
 
     def start_requests(self):
 
         # 请求接口获得新闻条数计算页数
         page_total = self.get_total_page() // 50
-        for page in range(0, page_total + 50):
+        length = page_total // 250
+        for page in range(0, page_total + length):
             r = random.random()
             yield Request(self.base_url.format(self.lid, page, r), callback=self.parse)
 

@@ -3,14 +3,19 @@ import time
 import pymysql
 from scrapy.selector import Selector
 
-conn = pymysql.connect(host="127.0.0.1", user="root", passwd="qq123456", db="news-spider", charset="utf8")
-cursor = conn.cursor()
-
-headers = {
-    'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
-}
 
 class IpProxy(object):
+    conn = pymysql.connect(
+        host="127.0.0.1",
+        user="hdsc",
+        passwd="hdsc0614",
+        db="news-spider",
+        charset="utf8")
+    cursor = conn.cursor()
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
+    }
 
     page_kuaidaili = 1
 
@@ -22,7 +27,7 @@ class IpProxy(object):
     def get_kuaidaili(self, url):
         print("url:" + url)
         print("page_kuaidaili:" + str(self.page_kuaidaili))
-        response = requests.get(url=url, headers=headers)
+        response = requests.get(url=url, headers=self.headers)
         response = Selector(text=response.text)
         if response:
             ip = response.xpath('//td[@data-title="IP"]/text()').extract()
@@ -72,8 +77,8 @@ class IpProxy(object):
 
     def is_exist(self, ip):
         sql = "select id from ip_proxy where ip = '%s'" % (ip)
-        cursor.execute(sql)
-        result = cursor.fetchone()
+        self.cursor.execute(sql)
+        result = self.cursor.fetchone()
         if result:
             print("ip " + ip + " exist")
             return True
@@ -87,26 +92,26 @@ class IpProxy(object):
         sql = "insert ip_proxy(ip, port, type) VALUES('{0}', '{1}', '{2}')".format(
                 ip, port, type
             )
-        cursor.execute(sql)
-        conn.commit()
+        self.cursor.execute(sql)
+        self.conn.commit()
 
     def delete_ip(self, ip):
         print("delete ip:" + ip)
         sql = "delete from ip_proxy where ip = " + ip
-        cursor.execute(sql)
-        conn.commit()
+        self.cursor.execute(sql)
+        self.conn.commit()
 
     def delete_all_ip(self):
         print("delete all ip")
         sql = "delete from ip_proxy"
-        cursor.execute(sql)
-        conn.commit()
+        self.cursor.execute(sql)
+        self.conn.commit()
 
     def delete_invalid_ip(self):
         print("delete invalid ip")
         sql = "select * from ip_proxy"
-        cursor.execute(sql)
-        result = cursor.fetchall()
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
         for var in result:
             proxy_url = '{0}://{1}:{2}'.format(var[3], var[1], var[2])
             available = self.check_ip(var[3], proxy_url)
@@ -114,6 +119,10 @@ class IpProxy(object):
                 print("ip " + var[1] + " available")
             else:
                 sql = "delete from ip_proxy where ip='%s'" % (var[1])
-                cursor.execute(sql)
-                conn.commit()
+                self.cursor.execute(sql)
+                self.conn.commit()
                 print("delete ip:" + var[1])
+
+    def __del__(self):
+        self.cursor = None
+        self.conn.close()
