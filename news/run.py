@@ -18,7 +18,8 @@ def run(option, lid="0"):
             f.write(json_str)
             f.close()
             # 开始爬虫
-            cmdline.execute("scrapy crawl sina -o data/" + lid + ".csv".split())
+            # cmdline.execute("scrapy crawl sina -o data/" + str(lid) + ".csv".split())
+            cmdline.execute("scrapy crawl sina".split())
     elif option == "ip":
         proxy = IpProxy()
         # 先爬取新的代理，避免正在运行的爬虫没有代理可用
