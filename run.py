@@ -18,7 +18,11 @@ def run(option, lid="0"):
             f.write(json_str)
             f.close()
             # 开始爬虫
+<<<<<<< HEAD:run.py
             # cmdline.execute("scrapy crawl sina -o data/" + lid + ".csv".split())
+=======
+            # cmdline.execute("scrapy crawl sina -o data/" + str(lid) + ".csv".split())
+>>>>>>> df47d58ec76b360090026d38486947024bcf1e9d:news/run.py
             cmdline.execute("scrapy crawl sina".split())
     elif option == "ip":
         proxy = IpProxy()
