@@ -7,6 +7,7 @@
 
 import random
 import pymysql
+import json
 from scrapy import signals
 from fake_useragent import UserAgent
 
@@ -109,11 +110,15 @@ class NewsDownloaderMiddleware(object):
 # 自定义IP代理中间件
 class ProxyMiddleware(object):
     def process_request(self, request, spider):
+        f = open("database.json", "r")
+        json_str = f.read()
+        f.close()
+        json_dic = json.loads(json_str)
         conn = pymysql.connect(
-            host="127.0.0.1",
-            user="hdsc",
-            passwd="hdsc0614",
-            db="news-spider",
+            host=json_dic["MYSQL_HOST"],
+            user=json_dic["MYSQL_USER"],
+            passwd=json_dic["MYSQL_PASSWD"],
+            db=json_dic["MYSQL_DB"],
             charset="utf8")
         cursor = conn.cursor()
 

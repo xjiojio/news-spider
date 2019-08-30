@@ -1,23 +1,33 @@
 import requests
 import time
+import json
 import pymysql
 from scrapy.selector import Selector
 
 
 class IpProxy(object):
-    conn = pymysql.connect(
-        host="127.0.0.1",
-        user="hdsc",
-        passwd="hdsc0614",
-        db="news-spider",
-        charset="utf8")
-    cursor = conn.cursor()
+    conn = None
+    cursor = None
 
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
     }
 
     page_kuaidaili = 1
+
+    def __init__(self):
+        f = open("database.json", "r")
+        json_str = f.read()
+        f.close()
+        json_dic = json.loads(json_str)
+        conn = pymysql.connect(
+            host=json_dic["MYSQL_HOST"],
+            user=json_dic["MYSQL_USER"],
+            passwd=json_dic["MYSQL_PASSWD"],
+            db=json_dic["MYSQL_DB"],
+            charset="utf8")
+        cursor = conn.cursor()
+
 
     def get_free_ip(self):
         print("get free ip from internet:")

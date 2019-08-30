@@ -29,14 +29,6 @@ FEED_EXPORT_FIELDS = [
     'source',
     'category']
 
-# mysql配置
-MYSQL_HOST = "127.0.0.1"
-MYSQL_USER = ""
-MYSQL_PASSWD = ""
-MYSQL_DB = ""
-LID = 0
-
-
 # 自己加的
 
 

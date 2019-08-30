@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pymysql
+import json
 
 # Define your item pipelines here
 #
@@ -12,11 +13,15 @@ class NewsPipeline(object):
     cursor = None
 
     def open_spider(self, spider):
+        f = open("database.json", "r")
+        json_str = f.read()
+        f.close()
+        json_dic = json.loads(json_str)
         self.conn = pymysql.connect(
-            host="127.0.0.1",
-            user="hdsc",
-            passwd="hdsc0614",
-            db="news-spider",
+            host=json_dic["MYSQL_HOST"],
+            user=json_dic["MYSQL_USER"],
+            passwd=json_dic["MYSQL_PASSWD"],
+            db=json_dic["MYSQL_DB"],
             charset="utf8")
         self.cursor = self.conn.cursor()
 
@@ -54,6 +59,8 @@ class NewsPipeline(object):
     def update_category(self, item, result):
         newcursor = self.conn.cursor()
         print("add category:" + item['category'])
-        sql = "update allNews set category='{}' where news_id='{}'".format(result[1] + "," + item['category'], result[0])
+        new_category = result[1] + "," + item['category']
+        print("new category:" + new_category)
+        sql = "update allNews set category='{}' where news_id='{}'".format(new_category, result[0])
         newcursor.execute(sql)
         self.conn.commit()
