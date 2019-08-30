@@ -9,6 +9,7 @@ Desktop.ini
 # Linux
 
 # Python:
+.idea
 *.py[cod]
 *.so
 *.egg
