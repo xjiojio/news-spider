@@ -37,8 +37,6 @@ class SinaSpider(scrapy.Spider):
         lid_json = f.read()
         lid_dic = json.loads(lid_json)
         self.lid = lid_dic['lid']
-        # print("lid:" + str(self.lid))
-        # exit(0)
 
     def start_requests(self):
 
