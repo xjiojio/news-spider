@@ -81,6 +81,8 @@ class SinaSpider(scrapy.Spider):
         item['intro'] = news['intro']
         item['keywords'] = news['keywords']
         item['content'] = ''.join(response.xpath('//*[@id="artibody"]/p/text()').extract()).replace(u'\u3000\u3000', u'\n').replace(u'\xa0\xa0', u'\n').replace(u'\r\n', u'\n').replace(u'\n\r', u'\n').replace(u'\'', u'\\\'').strip()
+        if item['content'] == '':
+            item['content'] = ''.join(response.xpath('//*[@id="article"]/p/text()').extract()).replace(u'\u3000\u3000',u'\n').replace(u'\xa0\xa0', u'\n').replace(u'\r\n', u'\n').replace(u'\n\r', u'\n').replace(u'\'', u'\\\'').strip()
         item['category'] = self.category[self.lid]
 
         yield item
