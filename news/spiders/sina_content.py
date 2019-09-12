@@ -7,7 +7,7 @@ from scrapy.selector import Selector
 
 def get_url_item(last_news_id):
     cursor = conn.cursor()
-    sql = "select news_id,url from allNews where content = '' and news_id>{0}".format(last_news_id)
+    sql = "select news_id,url from allNews where content = '' and news_id>{0} limit 1".format(last_news_id)
     cursor.execute(sql)
     item = cursor.fetchone()
     print(item)
