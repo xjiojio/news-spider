@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import requests
 import time
 import json
@@ -52,6 +53,8 @@ class IpProxy(object):
 
                 if available and (not is_exist):
                     self.save_ip(ip[i], port[i], type[i])
+                if not available and is_exist:
+                    self.delete_ip(ip[i])
         else:
             print("tr_list is null")
 
