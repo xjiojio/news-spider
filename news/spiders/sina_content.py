@@ -49,7 +49,7 @@ conn = pymysql.connect(
     user=json_dic["MYSQL_USER"],
     passwd=json_dic["MYSQL_PASSWD"],
     db=json_dic["MYSQL_DB"],
-    charset="utf8")
+    charset="utf8mb4")
 
 news = None
 while(True):
