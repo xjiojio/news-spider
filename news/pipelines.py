@@ -22,7 +22,7 @@ class NewsPipeline(object):
             user=json_dic["MYSQL_USER"],
             passwd=json_dic["MYSQL_PASSWD"],
             db=json_dic["MYSQL_DB"],
-            charset="utf8")
+            charset="utf8mb4")
         self.cursor = self.conn.cursor()
 
     def process_item(self, item, spider):
