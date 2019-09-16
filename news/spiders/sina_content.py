@@ -33,7 +33,7 @@ def get_content(news):
             print("content2:" + content)
         else:
             print("content1:" + content)
-        print("len:" + str(len(content)))
+        print("len:" + str(len(content.decode('utf-8'))))
         # if len(content) > 15000:
         #     content = content[0, 15000]
         # cursor = conn.cursor()
