@@ -33,11 +33,13 @@ def get_content(news):
             print("content2:" + content)
         else:
             print("content1:" + content)
-
-        cursor = conn.cursor()
-        sql = "update allNews set content='{0}' where news_id={1}".format(content, news[0])
-        cursor.execute(sql)
-        conn.commit()
+        print("len:" + str(len(content)))
+        # if len(content) > 15000:
+        #     content = content[0, 15000]
+        # cursor = conn.cursor()
+        # sql = "update allNews set content='{0}' where news_id={1}".format(content, news[0])
+        # cursor.execute(sql)
+        # conn.commit()
 
 
 f = open("../../database.json", "r")
